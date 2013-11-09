@@ -135,7 +135,6 @@ sub format_request {
     push(@{${*$self}{'http_request_method'}}, $method);
     my $ver = ${*$self}{'http_version'};
     my $peer_ver = ${*$self}{'http_peer_http_version'} || "1.0";
-    $ver = '1.0' if $method eq 'CONNECT';
 
     my @h;
     my @connection;
