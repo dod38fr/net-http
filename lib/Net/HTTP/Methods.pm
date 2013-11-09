@@ -135,6 +135,7 @@ sub format_request {
     push(@{${*$self}{'http_request_method'}}, $method);
     my $ver = ${*$self}{'http_version'};
     my $peer_ver = ${*$self}{'http_peer_http_version'} || "1.0";
+    $ver = '1.0' if $method eq 'CONNECT';
 
     my @h;
     my @connection;
@@ -162,7 +163,7 @@ sub format_request {
     if ($given{te}) {
 	push(@connection, "TE") unless grep lc($_) eq "te", @connection;
     }
-    elsif ($self->send_te && gunzip_ok()) {
+    elsif ($self->send_te && gunzip_ok() && $method ne 'CONNECT') {
 	# gzip is less wanted since the IO::Uncompress::Gunzip interface for
 	# it does not really allow chunked decoding to take place easily.
 	push(@h2, "TE: deflate,gzip;q=0.3");
